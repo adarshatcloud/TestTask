@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialog_title_image_chooser">इमेज यूआरएल चुने</string>
+    <string name="dialog_title_language_chooser">भाषा बदलो</string>
+    <string name="label_confirm">पुष्टि करें</string>
+    <string name="label_cancel">रद्द करना</string>
+    <string name="action_change_image_url">छवि सर्वर बदलें</string>
+
+    <string name="label_language_hindi">हिंदी</string>
+    <string name="label_language_english">अंग्रेज़ी</string>
+    <string name="str_message_not_connected">आप इंटरनेट से नहीं जुड़े हैं</string>
+    <string name="label_close">बंद करे</string>
+</resources>
