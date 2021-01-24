@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     private var mConnectivityManager: ConnectivityManager?=null
     private var isNetworkConnected = false
 
-    private val imageUrl = "https://picsum.photos/720/120"
+    private val imageUrl = "https://picsum.photos/720/1280"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
