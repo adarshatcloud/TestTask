@@ -1,43 +1,49 @@
-package com.example.randomimagefetcher
+package com.example.sampletest
 
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.randomimagefetcher.databinding.MainActivityBinding
-import com.example.randomimagefetcher.interfaces.ImageUrlChooserCallBack
-import com.example.randomimagefetcher.interfaces.LanguageChangeListener
+import com.example.sampletest.databinding.MainActivityBinding
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity(), ImageUrlChooserCallBack {
+class MainActivity : AppCompatActivity() {
 
-    lateinit var mainActivityBinding: MainActivityBinding
-    private lateinit var mConnectivityManager: ConnectivityManager
+    val mainActivityBinding: MainActivityBinding by lazy {MainActivityBinding.inflate(layoutInflater) }
+    private var mConnectivityManager: ConnectivityManager?=null
     private var isNetworkConnected = false
+
+    private val imageUrl = "https://picsum.photos/720/120"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainActivityBinding = MainActivityBinding.inflate(layoutInflater)
         setContentView(mainActivityBinding.root)
 
         mConnectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
         initNetworkCallback()
 
-        //If no url stored in preference
-        if (LocalStorage(this@MainActivity).getStringValue(getString(R.string.pref_key_image_url)) == null) {
-            //Ask user to choose an url to be used for loading the image
-            showImageChooserDialog(this, this)
+//        //If first time stored in pref
+        if (LocalStorage(this@MainActivity).getBooleanValue(getString(R.string.pref_key_first_time))) {
+
+            loadImage(imageUrl)
+        }
+        else{
+            loadImage(imageUrl, true)
         }
 
+
+        setupRefreshListener()
+
+    }
+
+
+    private fun setupRefreshListener() {
         mainActivityBinding.fabReload.setOnClickListener {
             if (isNetworkConnected) {
                 loadFreshImage()
@@ -50,17 +56,6 @@ class MainActivity : AppCompatActivity(), ImageUrlChooserCallBack {
                     .show()
             }
         }
-
-        LocalStorage(this@MainActivity).getStringValue(getString(R.string.pref_key_image_url))
-            ?.let { prefsImgUrl ->
-                loadImage(prefsImgUrl, true)
-            }
-
-
-        mainActivityBinding.actionMenu.setOnClickListener {
-            showPopupMenu(mainActivityBinding.actionMenu)
-        }
-
     }
 
     private fun loadImage(url: String, isFirstTime: Boolean = false) {
@@ -83,47 +78,20 @@ class MainActivity : AppCompatActivity(), ImageUrlChooserCallBack {
             runOnUiThread {
                 Glide.get(this)
                     .clearMemory()
-                LocalStorage(this).getStringValue(getString(R.string.pref_key_image_url))
-                    ?.let { prefsImgUrl ->
-                        loadImage(prefsImgUrl, firstTime)
+
+                        loadImage(imageUrl, firstTime)
                     }
-            }
-        }
-    }
 
-    override fun onImageUrlChooserListener(imageUrl: String) {
-        Log.e("ImageUrl", imageUrl)
-        LocalStorage(this@MainActivity).setStringValue(
-            getString(R.string.pref_key_image_url),
-            imageUrl
-        )
-    }
-
-    private fun showPopupMenu(view: View) {
-
-        val popupMenu = PopupMenu(this, view)
-        popupMenu.menuInflater.inflate(R.menu.menu_main, popupMenu.menu)
-
-        popupMenu.setOnMenuItemClickListener { menu ->
-
-            when (menu.itemId) {
-
-                R.id.action_url_change -> {
-                    showImageChooserDialog(this, this)
-                }
+            if(firstTime)
+                LocalStorage(this@MainActivity).setBooleanValue(getString(R.string.pref_key_first_time),true)
 
             }
-
-            return@setOnMenuItemClickListener true
-        }
-
-        popupMenu.show()
-
     }
+
 
     private fun initNetworkCallback() {
         val builder: NetworkRequest.Builder = NetworkRequest.Builder()
-        mConnectivityManager.registerNetworkCallback(builder.build(),
+        mConnectivityManager?.registerNetworkCallback(builder.build(),
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
@@ -148,7 +116,8 @@ class MainActivity : AppCompatActivity(), ImageUrlChooserCallBack {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            mConnectivityManager.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
+
+            mConnectivityManager?.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
         } catch (e: Exception) {
             e.printStackTrace()
         }

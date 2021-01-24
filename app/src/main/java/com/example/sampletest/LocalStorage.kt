@@ -1,4 +1,4 @@
-package com.example.randomimagefetcher
+package com.example.sampletest
 
 import android.content.Context
 import android.content.SharedPreferences

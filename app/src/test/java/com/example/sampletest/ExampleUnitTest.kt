@@ -1,4 +1,4 @@
-package com.example.randomimagefetcher
+package com.example.sampletest
 
 import org.junit.Test
 

@@ -1,14 +1,12 @@
 <resources>
-    <string name="app_name" translatable="false">RandomImageFetcher</string>
+    <string name="app_name" translatable="false">Sample Test</string>
 
-    <string name="dialog_title_image_chooser">Choose an Image Url</string>
+
     <string name="dialog_title_language_chooser">Change Language</string>
-    <string name="label_confirm">Confirm</string>
-    <string name="label_cancel">Cancel</string>
+
     <string name="pref_name" translatable="false">RandomImageFetcherData</string>
-    <string name="pref_key_image_url" translatable="false">ImageUrl</string>
+    <string name="pref_key_first_time" translatable="false">FirstTime</string>
     <string name="pref_key_language" translatable="false">Language</string>
-    <string name="action_change_image_url">Change Image Server</string>
 
     <string name="label_language_hindi">Hindi</string>
     <string name="label_language_english">English</string>

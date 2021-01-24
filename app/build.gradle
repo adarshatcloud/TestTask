@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -8,7 +9,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.randomimagefetcher"
+        applicationId "com.example.sampletest"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -47,7 +48,9 @@ dependencies {
 
     //Image Loading and Caching library
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
 
     testImplementation 'junit:junit:4.+'
